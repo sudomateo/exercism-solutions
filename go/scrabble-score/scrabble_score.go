@@ -17,9 +17,6 @@ var points = map[string]int{
 
 // Score caclulates my score for a given string
 func Score(s string) int {
-	if s == "" {
-		return 0
-	}
 	var score int
 	s = strings.ToUpper(s)
 	for _, c := range s {
