@@ -2,22 +2,22 @@
 package isogram
 
 import (
-	"strings"
+	"unicode"
 )
 
 // IsIsogram determines if a string is an isogram
 func IsIsogram(s string) bool {
-	s = strings.ToLower(s)
-	m := make(map[rune]int)
+	m := make(map[rune]bool)
 
 	for _, r := range s {
-		if string(r) == " " || string(r) == "-" {
+		r = unicode.ToLower(r)
+		if r == ' ' || r == '-' {
 			continue
 		}
-		m[r]++
-		if m[r] > 1 {
+		if m[r] {
 			return false
 		}
+		m[r] = true
 	}
 
 	return true
