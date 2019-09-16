@@ -1,4 +1,4 @@
-// Package dna contains a solution to the DNA exercise
+// Package dna contains a solution to the Nucleotide Count exercise
 package dna
 
 import (
