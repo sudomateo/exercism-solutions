@@ -3,20 +3,15 @@ package diffsquares
 
 // SquareOfSum calculates the square of a sum of integers
 func SquareOfSum(n int) int {
-	var sum int
-	for i := 1; i <= n; i++ {
-		sum += i
-	}
-	return sum * sum
+	return ((n * (n + 1)) / 2) * ((n * (n + 1)) / 2)
 }
 
 // SumOfSquares calculates the sum of the squares of integers
 func SumOfSquares(n int) int {
-	var sum int
-	for i := 1; i <= n; i++ {
-		sum += i * i
+	if n == 0 {
+		return 0
 	}
-	return sum
+	return (n * n) + SumOfSquares(n-1)
 }
 
 // Difference calculates the difference between the output of SquareOfSum and
