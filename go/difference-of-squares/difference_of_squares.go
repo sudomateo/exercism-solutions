@@ -8,10 +8,7 @@ func SquareOfSum(n int) int {
 
 // SumOfSquares calculates the sum of the squares of integers
 func SumOfSquares(n int) int {
-	if n == 0 {
-		return 0
-	}
-	return (n * n) + SumOfSquares(n-1)
+	return ((n * (n + 1) * ((2 * n) + 1)) / 6)
 }
 
 // Difference calculates the difference between the output of SquareOfSum and
