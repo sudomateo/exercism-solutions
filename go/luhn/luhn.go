@@ -17,7 +17,7 @@ func Valid(s string) bool {
 
 	for i, j := len(s)-1, 0; i >= 0; i, j = i-1, j+1 {
 		chr := s[i]
-		if chr < 47 || chr > 58 {
+		if chr < '0' || chr > '9' {
 			return false
 		}
 
