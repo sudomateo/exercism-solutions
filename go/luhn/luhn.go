@@ -2,9 +2,7 @@
 package luhn
 
 import (
-	"strconv"
 	"strings"
-	"unicode"
 )
 
 // Valid determines if a given string is valid per the Luhn formula
@@ -15,24 +13,19 @@ func Valid(s string) bool {
 		return false
 	}
 
-	for _, r := range s {
-		if !unicode.IsDigit(r) {
-			return false
-		}
-	}
-
 	var sum int
 
 	for i, j := len(s)-1, 0; i >= 0; i, j = i-1, j+1 {
-		digit, err := strconv.Atoi(string(s[i]))
-		if err != nil {
+		chr := s[i]
+		if chr < 47 || chr > 58 {
 			return false
 		}
+
+		digit := int(chr - '0')
 		if j%2 != 0 {
-			if digit*2 > 9 {
-				digit = (digit * 2) - 9
-			} else {
-				digit = digit * 2
+			digit *= 2
+			if digit > 9 {
+				digit -= 9
 			}
 		}
 		sum += digit
