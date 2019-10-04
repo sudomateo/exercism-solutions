@@ -5,52 +5,38 @@ import (
 	"fmt"
 )
 
-// Clock is the time represented by two integers
+const (
+	minutesPerDay int = 1440
+)
+
+// Clock is the time in minutes
 type Clock struct {
-	Hour   int
-	Minute int
+	Minutes int
 }
 
-// New contructs a new Clock. This needs to be more efficient.
+// New contructs a new Clock.
 func New(h, m int) Clock {
-
-	h = ((m / 60) + h) % 24
-	m = m % 60
-
-	if h < 0 && m >= 0 {
-		h = 24 + h
+	totalMinutes := ((h * 60) + m) % minutesPerDay
+	if totalMinutes < 0 {
+		totalMinutes = minutesPerDay + totalMinutes
 	}
-
-	if h < 0 && m < 0 {
-		h = 23 + h
-		m = 60 + m
-	}
-
-	if h >= 0 && m < 0 {
-		h = (0 + h) - 1
-		if h < 0 {
-			h = 23
-		}
-		m = 60 + m
-	}
-
 	return Clock{
-		Hour:   h,
-		Minute: m,
+		Minutes: totalMinutes,
 	}
 }
 
 // String prints Clock in a specific format
 func (c Clock) String() string {
-	return fmt.Sprintf("%02d:%02d", c.Hour, c.Minute)
+	return fmt.Sprintf("%02d:%02d", c.Minutes/60, c.Minutes%60)
+
 }
 
 // Add adds time to a Clock and returns a new Clock
 func (c Clock) Add(m int) Clock {
-	return New(c.Hour, c.Minute+m)
+	return New(0, c.Minutes+m)
 }
 
-// Substract subtracts time from a Clock and returns a new Clock
+// Subtract subtracts time from a Clock and returns a new Clock
 func (c Clock) Subtract(m int) Clock {
-	return New(c.Hour, c.Minute-m)
+	return New(0, c.Minutes-m)
 }
