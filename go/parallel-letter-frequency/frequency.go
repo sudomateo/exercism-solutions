@@ -25,7 +25,7 @@ func ConcurrentFrequency(xs []string) FreqMap {
 	}
 
 	result := FreqMap{}
-	for _ = range xs {
+	for range xs {
 		for k, v := range <-c {
 			result[k] += v
 		}
