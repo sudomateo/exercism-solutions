@@ -1,18 +1,21 @@
-// Package Tree Building contains a solution to the Tree Building exercism.io exercise.
+// Package tree contains a solution to the Tree Building exercism.io exercise.
 package tree
 
 import "errors"
 
+// Record represents a single record.
 type Record struct {
 	ID     int
 	Parent int
 }
 
+// Node represents a single node in the tree.
 type Node struct {
 	ID       int
 	Children []*Node
 }
 
+// Build parses a slice of Record structs and outputs the Node struct.
 func Build(records []Record) (*Node, error) {
 	// Return if no data is passed.
 	if len(records) == 0 {
