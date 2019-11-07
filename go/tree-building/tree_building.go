@@ -1,7 +1,10 @@
 // Package tree contains a solution to the Tree Building exercism.io exercise.
 package tree
 
-import "errors"
+import (
+	"errors"
+	"sort"
+)
 
 // Record represents a single record.
 type Record struct {
@@ -24,11 +27,7 @@ func Build(records []Record) (*Node, error) {
 	}
 
 	// Sort the records.
-	for i, r := range records {
-		if (r.ID != i) && (r.ID >= 0 && r.ID < len(records)) {
-			records[i], records[r.ID] = records[r.ID], records[i]
-		}
-	}
+	sort.SliceStable(records, func(i, j int) bool { return records[i].ID < records[j].ID })
 
 	// Place each node in a slice. Append the children to the respective parent.
 	nodes := make([]Node, len(records))
@@ -36,10 +35,9 @@ func Build(records []Record) (*Node, error) {
 		if (r.ID != i) || !((r.ID > r.Parent) || (r.ID == 0 && r.Parent == 0)) {
 			return nil, errors.New("invalid record")
 		}
-		nodes[i].ID = i
 		if i != 0 {
-			p := &nodes[r.Parent]
-			p.Children = append(p.Children, &nodes[i])
+			nodes[i].ID = i
+			nodes[r.Parent].Children = append(nodes[r.Parent].Children, &nodes[i])
 		}
 	}
 
