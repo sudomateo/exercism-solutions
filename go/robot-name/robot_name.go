@@ -58,14 +58,14 @@ func (r *Robot) Reset() {
 // of two uppercase letters followed by three digits.
 func genName() (string, error) {
 	rand.Seed(time.Now().UnixNano())
-	id := genId()
+	id := genID()
 	str := genStr()
 	name := str + id
 	return name, nil
 }
 
-// genId generates a random string of three digits.
-func genId() string {
+// genID generates a random string of three digits.
+func genID() string {
 	n := rand.Intn(999 + 1)
 	id := fmt.Sprintf("%03d", n)
 	return id
