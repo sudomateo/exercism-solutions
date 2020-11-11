@@ -13,6 +13,7 @@ const (
 
 var (
 	namesInUse = make(map[string]struct{})
+	random     = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
 // Robot represents a factory robot.
@@ -25,19 +26,13 @@ func (r *Robot) Name() (string, error) {
 	if r.name != "" {
 		return r.name, nil
 	}
-	name, err := genName()
-	if err != nil {
-		return "", err
-	}
+	name := genName()
 	for {
 		if len(namesInUse) >= maxNumNames {
 			return "", errors.New("exhausted namespace")
 		}
 		if _, ok := namesInUse[name]; ok {
-			name, err = genName()
-			if err != nil {
-				return "", err
-			}
+			name = genName()
 			continue
 		}
 		namesInUse[name] = struct{}{}
@@ -56,26 +51,9 @@ func (r *Robot) Reset() {
 
 // genName generates a unique name for a robot in the format
 // of two uppercase letters followed by three digits.
-func genName() (string, error) {
-	rand.Seed(time.Now().UnixNano())
-	id := genID()
-	str := genStr()
-	name := str + id
-	return name, nil
-}
-
-// genID generates a random string of three digits.
-func genID() string {
-	n := rand.Intn(999 + 1)
-	id := fmt.Sprintf("%03d", n)
-	return id
-}
-
-// genStr generates a random string of two uppercase letters.
-func genStr() string {
-	r := make([]rune, 2)
-	for i := range r {
-		r[i] = rune(rand.Intn('Z'-'A'+1) + 'A')
-	}
-	return string(r)
+func genName() string {
+	r1 := random.Intn(26) + 'A'
+	r2 := random.Intn(26) + 'A'
+	num := random.Intn(1000)
+	return fmt.Sprintf("%c%c%03d", r1, r2, num)
 }
