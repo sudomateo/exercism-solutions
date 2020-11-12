@@ -12,7 +12,7 @@ const (
 )
 
 var (
-	namesInUse = make(map[string]struct{})
+	namesInUse = make(map[string]bool)
 	random     = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
@@ -26,19 +26,14 @@ func (r *Robot) Name() (string, error) {
 	if r.name != "" {
 		return r.name, nil
 	}
-	name := genName()
-	for {
-		if len(namesInUse) >= maxNumNames {
-			return "", errors.New("exhausted namespace")
-		}
-		if _, ok := namesInUse[name]; ok {
-			name = genName()
-			continue
-		}
-		namesInUse[name] = struct{}{}
-		r.name = name
-		break
+	if len(namesInUse) >= maxNumNames {
+		return "", errors.New("exhausted namespace")
 	}
+	r.name = genName()
+	for namesInUse[r.name] {
+		r.name = genName()
+	}
+	namesInUse[r.name] = true
 	return r.name, nil
 }
 
