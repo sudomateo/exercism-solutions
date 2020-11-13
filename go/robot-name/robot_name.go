@@ -39,9 +39,7 @@ func (r *Robot) Name() (string, error) {
 
 // Reset clears out the name for a robot.
 func (r *Robot) Reset() {
-	if r.name != "" {
-		r.name = ""
-	}
+	r.name = ""
 }
 
 // genName generates a unique name for a robot in the format
