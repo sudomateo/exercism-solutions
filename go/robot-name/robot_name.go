@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	maxNumNames = 26 * 26 * 10 * 10 * 10
-)
-
 var (
 	namesInUse = make(map[string]bool)
 	random     = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -26,7 +22,7 @@ func (r *Robot) Name() (string, error) {
 	if r.name != "" {
 		return r.name, nil
 	}
-	if len(namesInUse) >= maxNumNames {
+	if len(namesInUse) >= 26*26*10*10*10 {
 		return "", errors.New("exhausted namespace")
 	}
 	r.name = genName()
