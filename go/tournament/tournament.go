@@ -19,9 +19,22 @@ type team struct {
 	points int
 }
 
+// byPoints implements sort.Interface for []*team based on the points
+// each team has then by the team name if points are the same.
+type byPoints []*team
+
+func (p byPoints) Len() int      { return len(p) }
+func (p byPoints) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p byPoints) Less(i, j int) bool {
+	if p[i].points == p[j].points {
+		return p[i].name < p[j].name
+	}
+	return p[i].points > p[j].points
+}
+
 // Tally reads a scorecard and writes the results.
 func Tally(r io.Reader, w io.Writer) error {
-	teams := make(map[string]*team)
+	allTeams := make(map[string]*team)
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -34,55 +47,51 @@ func Tally(r io.Reader, w io.Writer) error {
 			return errors.New("failed to parse details from line")
 		}
 
-		t1, t2, result := details[0], details[1], details[2]
+		home, away, result := details[0], details[1], details[2]
 
-		if _, ok := teams[t1]; !ok {
-			teams[t1] = &team{name: t1}
+		if _, ok := allTeams[home]; !ok {
+			allTeams[home] = &team{name: home}
 		}
 
-		if _, ok := teams[t2]; !ok {
-			teams[t2] = &team{name: t2}
+		if _, ok := allTeams[away]; !ok {
+			allTeams[away] = &team{name: away}
 		}
 
-		teams[t1].played++
-		teams[t2].played++
+		allTeams[home].played++
+		allTeams[away].played++
 
 		switch result {
 		case "win":
-			teams[t1].wins++
-			teams[t2].losses++
+			allTeams[home].wins++
+			allTeams[home].points += 3
+			allTeams[away].losses++
 		case "loss":
-			teams[t1].losses++
-			teams[t2].wins++
+			allTeams[home].losses++
+			allTeams[away].wins++
+			allTeams[away].points += 3
 		case "draw":
-			teams[t1].draws++
-			teams[t2].draws++
+			allTeams[home].draws++
+			allTeams[home].points += 1
+			allTeams[away].draws++
+			allTeams[away].points += 1
 		default:
 			return errors.New("invalid result")
 		}
 	}
 
-	var all []*team
-	for _, team := range teams {
-		all = append(all, team)
+	var t byPoints
+	for _, team := range allTeams {
+		t = append(t, team)
 	}
-	sort.Slice(all, func(i, j int) bool {
-		p1 := 3*all[i].wins + 1*all[i].draws
-		p2 := 3*all[j].wins + 1*all[j].draws
-		if p1 == p2 {
-			return all[i].name < all[j].name
-		}
-		return p1 > p2
-	})
+	sort.Sort(byPoints(t))
 
 	_, err := fmt.Fprintf(w, "%-30s | %2s | %2s | %2s | %2s | %2s\n", "Team", "MP", "W", "D", "L", "P")
 	if err != nil {
 		return fmt.Errorf("failed to print header: %v", err)
 	}
 
-	for _, team := range all {
-		points := 3*team.wins + 1*team.draws
-		_, err := fmt.Fprintf(w, "%-30s | %2d | %2d | %2d | %2d | %2d\n", team.name, team.played, team.wins, team.draws, team.losses, points)
+	for _, team := range t {
+		_, err := fmt.Fprintf(w, "%-30s | %2d | %2d | %2d | %2d | %2d\n", team.name, team.played, team.wins, team.draws, team.losses, team.points)
 		if err != nil {
 			return fmt.Errorf("failed to print data: %v", err)
 		}
