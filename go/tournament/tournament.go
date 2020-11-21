@@ -58,9 +58,9 @@ func Tally(r io.Reader, w io.Writer) error {
 			awayTeam.points += 3
 		case "draw":
 			homeTeam.draws++
-			homeTeam.points += 1
+			homeTeam.points++
 			awayTeam.draws++
-			awayTeam.points += 1
+			awayTeam.points++
 		default:
 			return fmt.Errorf("invalid result %s, expected one of [win, loss, draw]", result)
 		}
