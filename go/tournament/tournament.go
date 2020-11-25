@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-const (
-	rowFormat = "%-30s | %2v | %2v | %2v | %2v | %2v\n"
-)
-
 // team holds the statistics for a given team.
 type team struct {
 	name   string
@@ -78,6 +74,8 @@ func Tally(r io.Reader, w io.Writer) error {
 		}
 		return t[i].points > t[j].points
 	})
+
+	rowFormat := "%-30s | %2v | %2v | %2v | %2v | %2v\n"
 
 	_, err := fmt.Fprintf(w, rowFormat, "Team", "MP", "W", "D", "L", "P")
 	if err != nil {
