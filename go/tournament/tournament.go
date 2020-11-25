@@ -24,17 +24,17 @@ type team struct {
 
 // Tally reads a scorecard and writes the results.
 func Tally(r io.Reader, w io.Writer) error {
-	allTeams := make(map[string]team)
+	allTeams := map[string]team{}
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line == "" || line[0] == '#' {
+		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
 		details := strings.Split(line, ";")
 		if len(details) != 3 {
-			return fmt.Errorf("failed to parse match details, expected 3 entries, got %d entries", len(details))
+			return fmt.Errorf("bad line %s, expected teamA;teamB;result", details)
 		}
 
 		t1, t2, result := details[0], details[1], details[2]
@@ -68,7 +68,7 @@ func Tally(r io.Reader, w io.Writer) error {
 		allTeams[t2] = awayTeam
 	}
 
-	var t []team
+	t := make([]team, 0, len(allTeams))
 	for _, team := range allTeams {
 		t = append(t, team)
 	}
