@@ -18,64 +18,53 @@ func ToRomanNumeral(n int) (string, error) {
 
 	var b bytes.Buffer
 
-	if thousands > 0 {
-		for i := 0; i < thousands; i++ {
-			b.WriteString("M")
-		}
+	for i := 0; i < thousands; i++ {
+		b.WriteString("M")
 	}
 
-	if hundreds > 0 {
-		switch hundreds {
-		case 1, 2, 3:
-			for i := 0; i < hundreds; i++ {
-				b.WriteString("C")
-			}
-		case 4:
-			b.WriteString("CD")
-		case 5, 6, 7, 8:
-			b.WriteString("D")
-			for i := 0; i < hundreds-5; i++ {
-				b.WriteString("C")
-			}
-		case 9:
-			b.WriteString("CM")
-		}
+	hundred, err := convertDigit(hundreds, "C", "D", "M")
+	if err != nil {
+		return "", fmt.Errorf("could not convert digit %d", hundreds)
+	}
+	ten, err := convertDigit(tens, "X", "L", "C")
+	if err != nil {
+		return "", fmt.Errorf("could not convert digit %d", tens)
+	}
+	one, err := convertDigit(ones, "I", "V", "X")
+	if err != nil {
+		return "", fmt.Errorf("could not convert digit %d", ones)
 	}
 
-	if tens > 0 {
-		switch tens {
-		case 1, 2, 3:
-			for i := 0; i < tens; i++ {
-				b.WriteString("X")
-			}
-		case 4:
-			b.WriteString("XL")
-		case 5, 6, 7, 8:
-			b.WriteString("L")
-			for i := 0; i < tens-5; i++ {
-				b.WriteString("X")
-			}
-		case 9:
-			b.WriteString("XC")
-		}
+	b.WriteString(hundred)
+	b.WriteString(ten)
+	b.WriteString(one)
+
+	return b.String(), nil
+}
+
+// convertDigit converts a single digit to its equivalent Roman numeral representation
+// using specified strings for its ones, fives, and tens places.
+func convertDigit(digit int, numeralOne, numeralFive, numeralTen string) (string, error) {
+	if digit < 0 || digit > 9 {
+		return "", fmt.Errorf("cannot convert %d", digit)
 	}
 
-	if ones > 0 {
-		switch ones {
-		case 1, 2, 3:
-			for i := 0; i < ones; i++ {
-				b.WriteString("I")
-			}
-		case 4:
-			b.WriteString("IV")
-		case 5, 6, 7, 8:
-			b.WriteString("V")
-			for i := 0; i < ones-5; i++ {
-				b.WriteString("I")
-			}
-		case 9:
-			b.WriteString("IX")
+	var b bytes.Buffer
+
+	switch digit {
+	case 1, 2, 3:
+		for i := 0; i < digit; i++ {
+			b.WriteString(numeralOne)
 		}
+	case 4:
+		b.WriteString(numeralOne + numeralFive)
+	case 5, 6, 7, 8:
+		b.WriteString(numeralFive)
+		for i := 0; i < digit-5; i++ {
+			b.WriteString(numeralOne)
+		}
+	case 9:
+		b.WriteString(numeralOne + numeralTen)
 	}
 
 	return b.String(), nil
