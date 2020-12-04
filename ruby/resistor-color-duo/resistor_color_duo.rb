@@ -1,10 +1,7 @@
 class ResistorColorDuo
-  COLORS = ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white"]
+  COLORS = %w[black brown red orange yellow green blue violet grey white].freeze
 
   def self.value(bands)
-    if bands.length < 2
-      return 0
-    end
-    COLORS.find_index(bands[0]) * 10 + COLORS.find_index(bands[1])
+    bands[..1].map { |color| COLORS.index(color) }.join.to_i
   end
 end
