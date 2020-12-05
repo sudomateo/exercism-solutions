@@ -8,18 +8,18 @@ class HighScores
    end
    
    def latest
-     @scores.last
+     scores().last
    end
    
    def personal_best
-     @scores.max
+     scores().max
    end
    
    def latest_is_personal_best?
-     @scores.last == @scores.max
+     latest() == personal_best()
    end
 
    def personal_top_three
-     @scores.sort.reverse.first(3)
+     scores().sort.reverse.first(3)
    end
 end
