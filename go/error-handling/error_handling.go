@@ -23,6 +23,8 @@ func Use(o ResourceOpener, input string) (err error) {
 				err = e
 			case error:
 				err = e
+			default:
+				err = nil
 			}
 		}
 	}()
