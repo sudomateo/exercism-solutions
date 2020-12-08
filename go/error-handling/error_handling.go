@@ -24,7 +24,7 @@ func Use(o ResourceOpener, input string) (err error) {
 			case error:
 				err = e
 			default:
-				err = nil
+				panic(r)
 			}
 		}
 	}()
