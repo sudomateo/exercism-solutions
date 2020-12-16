@@ -1,6 +1,6 @@
 package erratum
 
-import "errors"
+import "fmt"
 
 // Use opens a Resource using ResourceOpener o and performs Frob on input. The
 // Frob may panic so we try to recover if so.
@@ -27,7 +27,7 @@ func Use(o ResourceOpener, input string) (err error) {
 			case error:
 				err = e
 			default:
-				err = errors.New("unable to recover from Frob panic")
+				err = fmt.Errorf("unable to recover from Frob panic: %v", r)
 			}
 		}
 	}()
