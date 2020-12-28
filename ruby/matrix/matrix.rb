@@ -4,8 +4,8 @@ class Matrix
   end
 
   def rows
-    @matrix.split("\n").map do |row|
-      row.split(" ").map do |elem|
+    @matrix.each_line.map do |row|
+      row.split().map do |elem|
         elem.to_i
       end
     end
