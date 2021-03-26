@@ -1,11 +1,5 @@
 class Series
 
-  private
-
-  attr_reader :series
-
-  public
-
   def initialize(series)
     @series = series
   end
@@ -14,4 +8,8 @@ class Series
     raise ArgumentError if slice > series.chars.length
     series.chars.each_cons(slice).map(&:join)
   end
+
+  private
+
+  attr_reader :series
 end
