@@ -31,33 +31,6 @@ var timeTests = []struct {
 	{-121, -5810, "22:10"}, // negative hour and minutes both roll over continuously
 }
 
-// Create a new clock literal with an initial time
-var timeTestsLiteral = []struct {
-	m    int
-	want string
-}{
-	{480, "08:00"},    // on the hour
-	{669, "11:09"},    // past the hour
-	{1440, "00:00"},   // midnight is zero hours
-	{1500, "01:00"},   // hour rolls over
-	{6000, "04:00"},   // hour rolls over continuously
-	{120, "02:00"},    // sixty minutes is next hour
-	{160, "02:40"},    // minutes roll over
-	{1723, "04:43"},   // minutes roll over continuously
-	{1660, "03:40"},   // hour and minutes roll over
-	{15061, "11:01"},  // hour and minutes roll over continuously
-	{12960, "00:00"},  // hour and minutes roll over to exactly midnight
-	{-45, "23:15"},    // negative hour
-	{-1500, "23:00"},  // negative hour rolls over
-	{-5460, "05:00"},  // negative hour rolls over continuously
-	{20, "00:20"},     // negative minutes
-	{-100, "22:20"},   // negative minutes roll over
-	{-4760, "16:40"},  // negative minutes roll over continuously
-	{60, "01:00"},     // negative sixty minutes is previous hour
-	{-1660, "20:20"},  // negative hour and minutes both roll over
-	{-13070, "22:10"}, // negative hour and minutes both roll over continuously
-}
-
 // Add minutes
 var addTests = []struct {
 	h, m, a int
