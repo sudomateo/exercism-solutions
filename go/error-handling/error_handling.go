@@ -10,10 +10,12 @@ func Use(o ResourceOpener, input string) (err error) {
 	var res Resource
 	res, err = o()
 	for err != nil {
-		if _, ok := err.(TransientError); !ok {
+		switch err.(type) {
+		case TransientError:
+			res, err = o()
+		default:
 			return err
 		}
-		res, err = o()
 	}
 	defer res.Close()
 
